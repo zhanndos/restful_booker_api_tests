@@ -1,0 +1,5 @@
+{
+    "BASE_URL":"https://restful-booker.herokuapp.com",
+    "USER":"admin",
+    "PASSWORD":"password123"
+}
