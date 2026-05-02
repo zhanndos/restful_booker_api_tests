@@ -4,6 +4,10 @@ from routes.booking_routes import create_booking_request
 from checkers.booking_checkers import check_booking_data, check_status_code
 
 
+pytestmark=[allure.feature("Booking")]
+
+
+@allure.story("POST /booking")
 @allure.step('create booking with valid data')
 def test_create_booking_with_valid_data(valid_booking_data):
     request_body = valid_booking_data
@@ -15,6 +19,7 @@ def test_create_booking_with_valid_data(valid_booking_data):
     assert response.json()["bookingid"] is not None
 
 
+@allure.story("POST /booking")
 @allure.step('create booking with no required fields')
 @pytest.mark.parametrize('field_to_miss', ['firstname', 'lastname', 'totalprice', 'depositpaid','bookingdates'])
 def test_create_booking_without_required_fields(valid_booking_data, field_to_miss):
@@ -26,9 +31,10 @@ def test_create_booking_without_required_fields(valid_booking_data, field_to_mis
     check_status_code(response, 500)
 
 
+@allure.story("POST /booking")
 @allure.step('create booking without additionalneeds')
 @pytest.mark.xfail(reason="Bug: additionalneeds is not required, API returns 200 instead of 500")
-def test_create_booking_without_additionalneeds(valid_booking_data, field_to_miss):
+def test_create_booking_without_additionalneeds(valid_booking_data):
     request_body = valid_booking_data
     del request_body["additionalneeds"]
 
@@ -37,6 +43,7 @@ def test_create_booking_without_additionalneeds(valid_booking_data, field_to_mis
     check_status_code(response, 500)
 
 
+@allure.story("POST /booking")
 @allure.step('create booking with invalid types in firstname and lastname')
 @pytest.mark.parametrize('field_to_change', ['firstname', 'lastname'])
 @pytest.mark.parametrize('invalid_type', [1,1.1, True, (), [], {}])
@@ -49,6 +56,7 @@ def test_create_booking_invalid_names(valid_booking_data, field_to_change, inval
     check_status_code(response, 500)
 
 
+@allure.story("POST /booking")
 @allure.step('create booking with invalid type in additionalneeds')
 @pytest.mark.xfail(reason="Bug: additionalneeds accepts any type, should return 500")
 @pytest.mark.parametrize('invalid_type', [1, 1.1, True, (), [], {}])
@@ -61,6 +69,7 @@ def test_create_booking_invalid_additionalneeds_type(valid_booking_data, invalid
     check_status_code(response, 500)
 
 
+@allure.story("POST /booking")
 @allure.step('create booking with invalid type in totalprice')
 @pytest.mark.xfail(reason="Bug: totalprice accepts any type, should return 500")
 @pytest.mark.parametrize('invalid_type', [-1, True, (), [], {}, 'abc'])
@@ -73,6 +82,7 @@ def test_create_booking_invalid_totalprice_type(valid_booking_data, invalid_type
     check_status_code(response, 500)
 
 
+@allure.story("POST /booking")
 @allure.step('create booking with invalid type in depositpaid')
 @pytest.mark.xfail(reason="Bug: depositpaid accepts any type, should return 500")
 @pytest.mark.parametrize('invalid_type', [-1, (), [], {}, 'abc'])
@@ -85,6 +95,7 @@ def test_create_booking_invalid_depositpaid_type(valid_booking_data, invalid_typ
     check_status_code(response, 500)
 
 
+@allure.story("POST /booking")
 @allure.step('create booking with invalid type in bookingdates')
 @pytest.mark.xfail(reason="Bug: bookingdates accepts any type, should return 500")
 @pytest.mark.parametrize('field_to_change', ['checkin', 'checkout'])
